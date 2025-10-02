@@ -1,0 +1,9 @@
+module nand2 (
+    input logic a,  // input a
+    input logic b,  // input b
+    output logic y  // output
+    );
+
+    assign y = ~(a & b);
+
+endmodule

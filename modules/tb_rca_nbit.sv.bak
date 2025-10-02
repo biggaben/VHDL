@@ -1,0 +1,35 @@
+module tb_rca_nbit;
+    parameter N = 4;
+    logic [N-1:0] a, b;
+    logic cin;
+    logic [N-1:0] sum;
+    logic cout;
+
+    // Instantiate the DUT
+    rca_nbit #(N) dut (
+        .a(a), .b(b), .cin(cin), .sum(sum), .cout(cout)
+    );
+
+    // Något fel    
+    integer i, j, k;
+    logic [N:0] expected; // N+1 bits to hold sum+carry
+    
+    initial begin
+        $display("a  b  cin | sum cout | expected | PASS?");
+        for (i = 0; i < 2**N; i = i + 1) begin
+            for (j = 0; j < 2**N; j = j + 1) begin
+                for (k = 0; k < 2; k = k + 1) begin
+                    a = i;
+                    b = j;
+                    cin = k;
+                    #1; // Wait for outputs to settle
+                    expected = a + b + cin;
+                    $display("%b %b  %b   | %b   %b   |  %b   | %s",
+                        {expected[N], expected[N-1:0]}
+                        {cout, sum} == expected ? "PASS" : "FAIL"
+                end
+            end
+        end
+        $finish;
+    end
+endmodule
